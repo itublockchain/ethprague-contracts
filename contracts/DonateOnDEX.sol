@@ -18,7 +18,6 @@ contract DonateOnDEX {
         uint256 percent, // over 10000
         uint256 amountOutMin,
         address[] calldata path,
-        address to,
         uint256 deadline
     ) external payable returns (uint256[] memory amounts) {
         require(msg.value > 0, "No msg.value!");
@@ -31,10 +30,10 @@ contract DonateOnDEX {
 
         IERC20(path[path.length - 1]).safeTransfer(
             msg.sender,
-            amount[path.length - 1]
+            amounts[path.length - 1]
         );
         pool.transfer(donation);
-        return;
+        return amounts;
     }
 
     function swapTokensForExactETH(
@@ -43,7 +42,6 @@ contract DonateOnDEX {
         uint256 amountOut,
         uint256 amountInMax,
         address[] calldata path,
-        address to,
         uint256 deadline
     ) external returns (uint256[] memory amounts) {
         IERC20(path[0]).safeTransferFrom(
@@ -62,7 +60,7 @@ contract DonateOnDEX {
             deadline
         );
 
-        IERC20(path[0]).safeApprove(address(routerContract), 0);
+        IERC20(path[0]).safeApprove(address(router), 0);
 
         uint256 donation = (amounts[amounts.length - 1] * percent) / 10000;
         amounts[amounts.length - 1] = amounts[amounts.length - 1] - donation;
@@ -70,7 +68,7 @@ contract DonateOnDEX {
         payable(msg.sender).transfer(amounts[amounts.length - 1]);
         pool.transfer(donation);
 
-        return;
+        return amounts;
     }
 
     function swapExactTokensForETH(
@@ -79,13 +77,12 @@ contract DonateOnDEX {
         uint256 amountIn,
         uint256 amountOutMin,
         address[] calldata path,
-        address to,
         uint256 deadline
     ) external returns (uint256[] memory amounts) {
         IERC20(path[0]).safeTransferFrom(msg.sender, address(this), amountIn);
 
         IERC20(path[0]).safeIncreaseAllowance(
-            address(routerContract),
+            address(router),
             amountIn
         );
 
@@ -103,7 +100,7 @@ contract DonateOnDEX {
         payable(msg.sender).transfer(amounts[amounts.length - 1]);
         pool.transfer(donation);
 
-        return;
+        return amounts;
     }
 
     function swapETHForExactTokens(
@@ -111,14 +108,13 @@ contract DonateOnDEX {
         uint256 percent, // over 10000
         uint256 amountOut,
         address[] calldata path,
-        address to,
         uint256 deadline
     ) external payable returns (uint256[] memory amounts) {
         require(msg.value > 0, "No msg.value!");
         uint256 amountsIn = IUniswapV2Router01(router).getAmountsIn(
             amountOut,
             path
-        );
+        )[1];
 
         uint256 donation = (amountsIn * percent) / 10000;
 
@@ -130,9 +126,9 @@ contract DonateOnDEX {
 
         IERC20(path[path.length - 1]).safeTransfer(
             msg.sender,
-            amount[path.length - 1]
+            amounts[path.length - 1]
         );
         pool.transfer(donation);
-        return;
+        return amounts;
     }
 }
