@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+
 %lang starknet
 
 from lib.cairo_contracts.src.openzeppelin.token.erc20.interfaces.IERC20 import IERC20
