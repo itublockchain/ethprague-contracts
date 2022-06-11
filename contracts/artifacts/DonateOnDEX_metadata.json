@@ -306,11 +306,11 @@
 			]
 		},
 		"contracts/DonateOnDEX.sol": {
-			"keccak256": "0xbced4daf7d7588633a23ff2c7bf3e8f93bd73c2e6cf8f0f96346c9fd31542ac7",
+			"keccak256": "0x005a4504231c67e14c7f92410e1407fbe91386ab2a35359595575765960cbd47",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8e2b21a028988665e34113d60dbf63fbfd27db76ac8e878869c7479e609a24a2",
-				"dweb:/ipfs/QmNtVMJFNMSP3XZU51vCs1guNB9ekK8kxCAmMgrzySyJRT"
+				"bzz-raw://efaf5f395d0b03c7ca57532d1ed84fe6642cf2798692c00990bef1ba31186069",
+				"dweb:/ipfs/QmdtSUA98qzRuEdYZUY8p2z13ahbGCa662NMaNNwosur9V"
 			]
 		},
 		"contracts/interfaces/IUniswapV2Router01.sol": {

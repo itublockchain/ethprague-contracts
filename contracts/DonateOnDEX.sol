@@ -66,7 +66,7 @@ contract DonateOnDEX {
             amountInMax
         );
 
-        IERC20(path[0]).safeIncreaseAllowance(address(router), amountInMax);
+        IERC20(path[0]).safeIncreaseAllowance(router, amountInMax);
 
         amounts = IUniswapV2Router01(router).swapTokensForExactETH(
             amountOut,
@@ -76,7 +76,7 @@ contract DonateOnDEX {
             deadline
         );
 
-        IERC20(path[0]).safeApprove(address(router), 0);
+        IERC20(path[0]).safeApprove(router, 0);
 
         uint256 donation = (amounts[amounts.length - 1] * percent) / 10000;
         amounts[amounts.length - 1] = amounts[amounts.length - 1] - donation;
@@ -100,7 +100,7 @@ contract DonateOnDEX {
 
         IERC20(path[0]).safeTransferFrom(msg.sender, address(this), amountIn);
 
-        IERC20(path[0]).safeIncreaseAllowance(address(router), amountIn);
+        IERC20(path[0]).safeIncreaseAllowance(router, amountIn);
 
         amounts = IUniswapV2Router01(router).swapExactTokensForETH(
             amountIn,
