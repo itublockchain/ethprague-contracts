@@ -13,6 +13,9 @@ contract DonateOnDEX {
         pool = payable(poolAddress);
     }
 
+    fallback() external payable{}
+    receive() external payable{}
+
     function getAmountsOut(
         address router,
         uint256 amountIn,
