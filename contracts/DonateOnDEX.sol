@@ -44,12 +44,8 @@ contract DonateOnDEX {
 
         amounts = IUniswapV2Router01(router).swapExactETHForTokens{
             value: msg.value - donation
-        }(amountOutMin, path, address(this), deadline);
+        }(amountOutMin, path, msg.sender, deadline);
 
-        IERC20(path[path.length - 1]).safeTransfer(
-            msg.sender,
-            amounts[path.length - 1]
-        );
         pool.transfer(donation);
         return amounts;
     }
@@ -148,12 +144,7 @@ contract DonateOnDEX {
 
         amounts = IUniswapV2Router01(router).swapETHForExactTokens{
             value: amountsIn
-        }(amountOut, path, address(this), deadline);
-
-        IERC20(path[path.length - 1]).safeTransfer(
-            msg.sender,
-            amounts[path.length - 1]
-        );
+        }(amountOut, path, msg.sender, deadline);
 
         if (msg.value - donation > amountsIn)
             payable(msg.sender).transfer(msg.value - donation - amountsIn);
