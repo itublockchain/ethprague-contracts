@@ -3,14 +3,14 @@ pragma solidity 0.8.13;
 
 contract Auction {
     struct AuctionDetails{
-        bool active,
-        uint nftId,
-        address nftAddress,
-        address nftOwner,
-        uint reservePrice,
-        uint highestBid,
-        address leadAddress,
-        uint deadline
+        bool active;
+        uint tokenId;
+        address nftAddress;
+        address nftOwner;
+        uint reservePrice;
+        uint highestBid;
+        address leadAddress;
+        uint deadline;
     }
 
     address owner;
@@ -35,22 +35,22 @@ contract Auction {
     function claimNft() external{}
 
 
-    function putOnAuction(address fromAddress, address nftAddress, address nftOwner, uint nftId, uint reservePrice, uint deadline) public {
+    function putOnAuction(address fromAddress, address nftAddress, address nftOwner, uint highestBid, uint tokenId, uint reservePrice, uint deadline) public {
         require(block.timestamp < deadline, "Invalid deadline");
-        auctionDetails[nftAddress][nftId] = AuctionDetails(
+        auctionDetails[nftAddress][tokenId] = AuctionDetails(
             true,
-            nftId,
+            tokenId,
             nftAddress,
             nftOwner,
-            reserveprice,
+            reservePrice,
             highestBid,
             nftOwner,
             deadline
         );
     }
 
-    function stopAuction(address fromAddress, address nftAddress, uint nftId) public {
-        require(manager == msg.sender, "Caller is not manager");
+    function stopAuction(address fromAddress, address nftAddress, uint tokenId) public {
+        require(fromAddress == msg.sender, "Caller is not manager");
         require(auctionDetails[nftAddress][tokenId].active == false, "Auction is not active");
 
         delete auctionDetails[nftAddress][tokenId];
