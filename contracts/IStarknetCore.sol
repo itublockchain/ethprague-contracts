@@ -5,7 +5,7 @@ interface IStarknetCore {
   /// @notice Sends a message to an L2 contract.
   /// @return the hash of the message.
   function sendMessageToL2(
-    uint256     ,
+    uint256 toAddress,
     uint256 selector,
     uint256[] calldata payload
   ) external returns (bytes32);
