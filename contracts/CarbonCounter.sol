@@ -19,6 +19,7 @@ contract CarbonCounter is ERC721URIStorage {
 
     mapping(address => uint256) ownerToId;
     mapping(address => uint256) burnedCarbons;
+    mapping(address => bool) authorized;
 
     constructor(string memory name, string memory symbol, address carbonAddress) ERC721(name, symbol) {
         carbonToken = IERC20(carbonAddress);
@@ -54,7 +55,17 @@ contract CarbonCounter is ERC721URIStorage {
     function burnCarbonToken() external {
     }
 
-    function updateURI() internal {
+    function increaseCB(address user, uint256 amount) external {
+        require(authorized[msg.sender], "Caller not authorized.");
+        burnedCarbons[user] += amount;
+        updateURI();
+    }
+
+    function setAuthorized(address auth) external onlyOwner {
+        authorized[auth] = !authorized[auth];
+    }
+
+    function updateURI() private {
         uint carbonBurned = burnedCarbons[msg.sender];
         uint tokenId = ownerToId[msg.sender];
 
