@@ -65,7 +65,7 @@ func constructor{
   return()
 end
 
-## VIEWS 
+## VIEWS
 ################################################################################
 
 @view
@@ -102,7 +102,7 @@ func add_bid{
     assert_lt(timestamp, auction.deadline)
   end
 
-  with_attr error_message("Bid is lte than the last bid"):
+  with_attr error_message("Bid lower than last bid"):
     assert_lt(auction.highest_bid, bid_amt)
   end
 
@@ -154,7 +154,7 @@ func claim_nft{
     contract_address=ETH,
     sender=caller,
     recipient=auction.nft_owner,
-    amount=Uint256(auction.highest_bid, 0) 
+    amount=Uint256(auction.highest_bid, 0)
   )
 
   # Make the call to the L1 contract
@@ -183,11 +183,11 @@ func put_on_auction{
   pedersen_ptr: HashBuiltin*,
   range_check_ptr
 }(
-  from_address: felt, 
-  nft_addr: felt, 
+  from_address: felt,
+  nft_addr: felt,
   nft_owner: felt,
-  nft_id: felt, 
-  reserve_price: felt, 
+  nft_id: felt,
+  reserve_price: felt,
   deadline: felt
 ):
   let (auction: AuctionDetails) = auction_details.read(nft_addr, nft_id)
@@ -204,7 +204,7 @@ func put_on_auction{
 
   with_attr error_message("Caller is not manager"):
     let (manager_addr: felt) = manager.read()
-    assert manager_addr = caller 
+    assert manager_addr = caller
   end
 
   with_attr error_message("Invalid deadline"):
@@ -263,7 +263,7 @@ end
 func _delete_auction{
   syscall_ptr: felt*,
   pedersen_ptr: HashBuiltin*,
-  range_check_ptr  
+  range_check_ptr
 }(nft_addr: felt, nft_id: felt):
   auction_details.write(
     nft_addr=nft_addr,
