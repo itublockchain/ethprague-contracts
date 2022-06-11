@@ -30,7 +30,7 @@ contract Auction {
         auctionDetails[_nftAddress][_nftId].highestBid = _bidAmount;
         auctionDetails[_nftAddress][_nftId].leadAddress = msg.sender;
     }
-    
+
 
     function claimNft() external{}
 
@@ -42,8 +42,8 @@ contract Auction {
             nftId,
             nftAddress,
             nftOwner,
-            reserveprice,
-            highestBid,
+            reservePrice,
+            0,
             nftOwner,
             deadline
         );

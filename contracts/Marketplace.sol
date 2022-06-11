@@ -27,17 +27,17 @@ contract Marketplace is ERC721Holder {
     //////////////////////////////////////////////////////////////*/
 
     //NFT contract address => tokenId => Auctionlisting
-    mapping(address => mapping(uint256 => AuctionListing)) auctionListings;
-    mapping(address => mapping(uint256 => BuyNowListing)) buyNowListings;
+    mapping(address => mapping(uint256 => AuctionListing)) public auctionListings;
+    mapping(address => mapping(uint256 => BuyNowListing)) public buyNowListings;
 
     IStarknetCore immutable starknetCore;
-    
+
     uint256 constant INITIALIZE_SELECTOR =
     1611874740453389057402018505070086259979648973895522495658169458461190851914;
 
     uint256 constant STOP_SELECTOR =
     32032038621086203069106091894612339762081205489210192790601047421080225239;
-    
+
     uint256 L2CONTRACT_ADDRESS =
     88716746582861518782029534537239299938153893061365637382342674063266644116;
 
@@ -52,13 +52,13 @@ contract Marketplace is ERC721Holder {
         uint256 startingPrice,
         uint256 endTime
     );
-    
+
     event AuctionUnlisted(
         address indexed seller,
         address indexed nftAddress,
         uint256 indexed tokenId
     );
-    
+
     event NFTListed(
         address indexed seller,
         address indexed nftAddress,
@@ -96,13 +96,13 @@ contract Marketplace is ERC721Holder {
         payload[1] = tokenId;
         payload[2] = startingPrice;
         payload[3] = block.timestamp + duration;
-        
+
         starknetCore.sendMessageToL2(
-            L2CONTRACT_ADDRESS, 
+            L2CONTRACT_ADDRESS,
             INITIALIZE_SELECTOR,
             payload
         );
-        
+
         emit AuctionListed(msg.sender, nftAddress, tokenId, startingPrice, block.timestamp + duration);
     }
 
@@ -123,18 +123,18 @@ contract Marketplace is ERC721Holder {
     function removeFromAuction(address nftAddress, uint tokenId) external {
         require(auctionListings[nftAddress][tokenId].seller == msg.sender);
         delete auctionListings[nftAddress][tokenId];
-        
+
         //[nftAddress, tokenId]
         uint256[] memory payload = new uint256[](2);
         payload[0] = uint256(uint160(nftAddress));
         payload[1] = tokenId;
-        
+
         starknetCore.sendMessageToL2(
             L2CONTRACT_ADDRESS,
             STOP_SELECTOR,
             payload
         );
-        
+
         IERC721(nftAddress).safeTransferFrom(address(this), msg.sender, tokenId);
         emit AuctionUnlisted(msg.sender, nftAddress, tokenId);
     }
@@ -152,7 +152,7 @@ contract Marketplace is ERC721Holder {
         rcvPayload[1] = uint256(uint160(nftAddress));
         rcvPayload[2] = tokenId;
         rcvPayload[3] = msg.value;
-        
+
         starknetCore.consumeMessageFromL2(L2CONTRACT_ADDRESS, rcvPayload);
 
         IERC721(nftAddress).safeTransferFrom(address(this), msg.sender, tokenId);
