@@ -3,14 +3,17 @@ pragma solidity 0.8.13;
 
 import "./interfaces/IUniswapV2Router01.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "./CarbonCounter.sol";
 
 contract DonateOnDEX {
     using SafeERC20 for IERC20;
 
+    CarbonCounter carbon;
     address payable public pool;
 
-    constructor(address poolAddress) {
+    constructor(address poolAddress, address nftAddress) {
         pool = payable(poolAddress);
+        carbon = CarbonCounter(nftAddress);
     }
 
     fallback() external payable{}
@@ -50,6 +53,8 @@ contract DonateOnDEX {
         }(amountOutMin, path, msg.sender, deadline);
 
         pool.transfer(donation);
+        carbon.increaseCB(msg.sender, donation);
+        
         return amounts;
     }
 
@@ -87,6 +92,7 @@ contract DonateOnDEX {
         payable(msg.sender).transfer(amounts[amounts.length - 1]);
         pool.transfer(donation);
         if (amountInMax > amounts[0]) IERC20(path[0]).safeTransfer(msg.sender, amountInMax - amounts[0]);
+        carbon.increaseCB(msg.sender, donation);
 
         return amounts;
     }
@@ -118,6 +124,7 @@ contract DonateOnDEX {
 
         payable(msg.sender).transfer(amounts[amounts.length - 1]);
         pool.transfer(donation);
+        carbon.increaseCB(msg.sender, donation);
 
         return amounts;
     }
@@ -154,6 +161,8 @@ contract DonateOnDEX {
             payable(msg.sender).transfer(msg.value - donation - amountsIn);
 
         pool.transfer(donation);
+        carbon.increaseCB(msg.sender, donation);
+
         return amounts;
     }
 }
