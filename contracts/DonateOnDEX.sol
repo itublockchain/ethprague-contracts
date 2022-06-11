@@ -63,7 +63,7 @@ contract DonateOnDEX {
         IERC20(path[0]).safeTransferFrom(
             msg.sender,
             address(this),
-            IUniswapV2Router01(router).getAmountsIn(amountOut, path)[0]
+            amountInMax
         );
 
         IERC20(path[0]).safeIncreaseAllowance(address(router), amountInMax);
@@ -83,6 +83,7 @@ contract DonateOnDEX {
 
         payable(msg.sender).transfer(amounts[amounts.length - 1]);
         pool.transfer(donation);
+        if (amountInMax > amounts[0]) IERC20(path[0]).safeTransfer(msg.sender, amountInMax - amounts[0]);
 
         return amounts;
     }
