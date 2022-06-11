@@ -13,6 +13,22 @@ contract DonateOnDEX {
         pool = payable(poolAddress);
     }
 
+    function getAmountsOut(address router, uint256 amountIn, address[] calldata path)
+        external
+        view
+        returns (uint256[] memory amounts)
+    {
+        return IUniswapV2Router01(router).getAmountsOut(amountIn, path);
+    }
+
+    function getAmountsIn(address router, uint256 amountOut, address[] calldata path)
+        external
+        view
+        returns (uint256[] memory amounts)
+    {
+        return IUniswapV2Router01(router).getAmountsIn(amountOut, path);
+    }
+
     function swapExactETHForTokens(
         address router,
         uint256 percent, // over 10000
