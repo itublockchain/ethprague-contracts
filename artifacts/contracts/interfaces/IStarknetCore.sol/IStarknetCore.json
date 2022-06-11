@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IStarknetCore",
-  "sourceName": "contracts/IStarknetCore.sol",
+  "sourceName": "contracts/interfaces/IStarknetCore.sol",
   "abi": [
     {
       "inputs": [
@@ -31,7 +31,7 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "toAddress",
           "type": "uint256"
         },
         {
