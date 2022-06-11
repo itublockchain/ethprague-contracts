@@ -157,11 +157,14 @@ contract Marketplace is ERC721Holder {
 
         starknetCore.consumeMessageFromL2(L2CONTRACT_ADDRESS, rcvPayload);
 
+        address payable seller = payable(auctionListings[nftAddress][tokenId].seller);
+        uint256 sellerShare = msg.value * 98 / 100;
+        
+        delete auctionListings[nftAddress][tokenId];        
+        
         IERC721(nftAddress).safeTransferFrom(address(this), msg.sender, tokenId);
-
-        uint256 donation = msg.value * 98 / 100;
-        payable(/**...*/).transfer(msg.value - donation);
-        pool.transfer(donation);
+        
+        seller.transfer(sellerShare);
     }
 
     function setL2Address(uint256 _L2Address) external {
