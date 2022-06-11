@@ -13,6 +13,22 @@ contract DonateOnDEX {
         pool = payable(poolAddress);
     }
 
+    function getAmountsOut(address router, uint256 amountIn, address[] calldata path)
+        external
+        view
+        returns (uint256[] memory amounts)
+    {
+        return IUniswapV2Router01(router).getAmountsOut(amountIn, path);
+    }
+
+    function getAmountsIn(address router, uint256 amountOut, address[] calldata path)
+        external
+        view
+        returns (uint256[] memory amounts)
+    {
+        return IUniswapV2Router01(router).getAmountsIn(amountOut, path);
+    }
+
     function swapExactETHForTokens(
         address router,
         uint256 percent, // over 10000
@@ -21,8 +37,10 @@ contract DonateOnDEX {
         uint256 deadline
     ) external payable returns (uint256[] memory amounts) {
         require(msg.value > 0, "No msg.value!");
+        require(10000 > percent, "Invalid percent.");
 
         uint256 donation = (msg.value * percent) / 10000;
+        amountOutMin = (amountOutMin * (10000 - percent)) / 10000;
 
         amounts = IUniswapV2Router01(router).swapExactETHForTokens{
             value: msg.value - donation
@@ -44,6 +62,8 @@ contract DonateOnDEX {
         address[] calldata path,
         uint256 deadline
     ) external returns (uint256[] memory amounts) {
+        require(10000 > percent, "Invalid percent.");
+
         IERC20(path[0]).safeTransferFrom(
             msg.sender,
             address(this),
@@ -79,12 +99,11 @@ contract DonateOnDEX {
         address[] calldata path,
         uint256 deadline
     ) external returns (uint256[] memory amounts) {
+        require(10000 > percent, "Invalid percent.");
+
         IERC20(path[0]).safeTransferFrom(msg.sender, address(this), amountIn);
 
-        IERC20(path[0]).safeIncreaseAllowance(
-            address(router),
-            amountIn
-        );
+        IERC20(path[0]).safeIncreaseAllowance(address(router), amountIn);
 
         amounts = IUniswapV2Router01(router).swapExactTokensForETH(
             amountIn,
@@ -111,6 +130,8 @@ contract DonateOnDEX {
         uint256 deadline
     ) external payable returns (uint256[] memory amounts) {
         require(msg.value > 0, "No msg.value!");
+        require(10000 > percent, "Invalid percent.");
+
         uint256 amountsIn = IUniswapV2Router01(router).getAmountsIn(
             amountOut,
             path
