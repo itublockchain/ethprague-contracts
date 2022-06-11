@@ -33,13 +33,13 @@ contract Marketplace is ERC721Holder {
     IStarknetCore immutable starknetCore;
     
     uint256 constant INITIALIZE_SELECTOR =
-    215307247182100370520050591091822763712463273430149262739280891880522753123;
+    1611874740453389057402018505070086259979648973895522495658169458461190851914;
 
     uint256 constant STOP_SELECTOR =
-    215307247182100370520050591091822763712463273430149262739280891880522753124;
+    32032038621086203069106091894612339762081205489210192790601047421080225239;
     
-    uint256 constant L2CONTRACT_ADDRESS =
-    215307247182100370520050591091822763712463273430149262739280891880522753123;
+    uint256 L2CONTRACT_ADDRESS =
+    88716746582861518782029534537239299938153893061365637382342674063266644116;
 
     /*//////////////////////////////////////////////////////////////
                                 EVENTS
@@ -101,7 +101,7 @@ contract Marketplace is ERC721Holder {
             L2CONTRACT_ADDRESS, 
             INITIALIZE_SELECTOR,
             payload
-            );
+        );
         
         emit AuctionListed(msg.sender, nftAddress, tokenId, startingPrice, block.timestamp + duration);
     }
@@ -133,7 +133,7 @@ contract Marketplace is ERC721Holder {
             L2CONTRACT_ADDRESS,
             STOP_SELECTOR,
             payload
-            );
+        );
         
         IERC721(nftAddress).safeTransferFrom(address(this), msg.sender, tokenId);
         emit AuctionUnlisted(msg.sender, nftAddress, tokenId);
@@ -146,15 +146,20 @@ contract Marketplace is ERC721Holder {
         emit AuctionUnlisted(msg.sender, nftAddress, tokenId);
     }
 
-    function claimAsset(address nftAddress, uint256 tokenId) external {
-        uint256[] memory rcvPayload = new uint256[](3);
+    function claimAsset(address nftAddress, uint256 tokenId) external payable {
+        uint256[] memory rcvPayload = new uint256[](4);
         rcvPayload[0] = uint256(uint160(msg.sender));
         rcvPayload[1] = uint256(uint160(nftAddress));
         rcvPayload[2] = tokenId;
+        rcvPayload[3] = msg.value;
         
         starknetCore.consumeMessageFromL2(L2CONTRACT_ADDRESS, rcvPayload);
 
         IERC721(nftAddress).safeTransferFrom(address(this), msg.sender, tokenId);
+    }
+
+    function setL2Address(uint256 _L2Address) external {
+        L2CONTRACT_ADDRESS = _L2Address;
     }
 
 }
