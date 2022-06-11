@@ -30,6 +30,7 @@ contract Marketplace is ERC721Holder {
     mapping(address => mapping(uint256 => AuctionListing)) public auctionListings;
     mapping(address => mapping(uint256 => BuyNowListing)) public buyNowListings;
 
+    address payable public pool;
     IStarknetCore immutable starknetCore;
 
     uint256 constant INITIALIZE_SELECTOR =
@@ -77,8 +78,9 @@ contract Marketplace is ERC721Holder {
                                CONSTRUCTOR
     //////////////////////////////////////////////////////////////*/
 
-    constructor(address _starknetCoreAddress) {
+    constructor(address _starknetCoreAddress, address _poolAddress) {
         starknetCore = IStarknetCore(_starknetCoreAddress);
+        pool = payable(_poolAddress);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -156,6 +158,10 @@ contract Marketplace is ERC721Holder {
         starknetCore.consumeMessageFromL2(L2CONTRACT_ADDRESS, rcvPayload);
 
         IERC721(nftAddress).safeTransferFrom(address(this), msg.sender, tokenId);
+
+        uint256 donation = msg.value * 98 / 100;
+        payable(/**...*/).transfer(msg.value - donation);
+        pool.transfer(donation);
     }
 
     function setL2Address(uint256 _L2Address) external {

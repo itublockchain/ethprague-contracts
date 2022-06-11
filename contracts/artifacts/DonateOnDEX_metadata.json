@@ -17,6 +17,10 @@
 				"type": "constructor"
 			},
 			{
+				"stateMutability": "payable",
+				"type": "fallback"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -252,6 +256,10 @@
 				],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
 			}
 		],
 		"devdoc": {
@@ -306,11 +314,11 @@
 			]
 		},
 		"contracts/DonateOnDEX.sol": {
-			"keccak256": "0xedf361556ec660d8e95d03235e625b8f91097ca04f4b3d9483ccf0eac23485ee",
+			"keccak256": "0x6d2f57aeaddc711af0acad0fa4b813ebf9ed87ed07e2293a854f2f140e241ab8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ddc27a044e6e6fd46446b19afdffa04999c4195e454b198833b06e244a91e1cd",
-				"dweb:/ipfs/QmdYdyYdFf1KEhTpFjQzAcVkc6AMhkn6E2HbaPm415Ri87"
+				"bzz-raw://2fa69fb88f582d1206f0eebf547a503c680dbb1a75e4ff153d5c16a0eafe71ce",
+				"dweb:/ipfs/QmRUVXhxym3dQmmtmwToG54YtZ3GVXsAfsiPFS26wWv8dc"
 			]
 		},
 		"contracts/interfaces/IUniswapV2Router01.sol": {
