@@ -17,6 +17,64 @@
 				"type": "constructor"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "router",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amountOut",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address[]",
+						"name": "path",
+						"type": "address[]"
+					}
+				],
+				"name": "getAmountsIn",
+				"outputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "amounts",
+						"type": "uint256[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "router",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amountIn",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address[]",
+						"name": "path",
+						"type": "address[]"
+					}
+				],
+				"name": "getAmountsOut",
+				"outputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "amounts",
+						"type": "uint256[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "pool",
 				"outputs": [
@@ -248,11 +306,11 @@
 			]
 		},
 		"contracts/DonateOnDEX.sol": {
-			"keccak256": "0x7de05a524a766a85c41d439d207ee4d7f906c6efc34ad58a0f408c96e30a80ec",
+			"keccak256": "0xedf361556ec660d8e95d03235e625b8f91097ca04f4b3d9483ccf0eac23485ee",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://0ce95c1d60c43183445e5161572601ffc8bf3cd5c667340f4e91e66770a6826d",
-				"dweb:/ipfs/QmfTB46fmKohr7zyDaujGLTHb3b7fyUhwAeSuesbtVbGLS"
+				"bzz-raw://ddc27a044e6e6fd46446b19afdffa04999c4195e454b198833b06e244a91e1cd",
+				"dweb:/ipfs/QmdYdyYdFf1KEhTpFjQzAcVkc6AMhkn6E2HbaPm415Ri87"
 			]
 		},
 		"contracts/interfaces/IUniswapV2Router01.sol": {

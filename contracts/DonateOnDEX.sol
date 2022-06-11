@@ -13,19 +13,22 @@ contract DonateOnDEX {
         pool = payable(poolAddress);
     }
 
-    function getAmountsOut(address router, uint256 amountIn, address[] calldata path)
-        external
-        view
-        returns (uint256[] memory amounts)
-    {
+    fallback() external payable{}
+    receive() external payable{}
+
+    function getAmountsOut(
+        address router,
+        uint256 amountIn,
+        address[] calldata path
+    ) external view returns (uint256[] memory amounts) {
         return IUniswapV2Router01(router).getAmountsOut(amountIn, path);
     }
 
-    function getAmountsIn(address router, uint256 amountOut, address[] calldata path)
-        external
-        view
-        returns (uint256[] memory amounts)
-    {
+    function getAmountsIn(
+        address router,
+        uint256 amountOut,
+        address[] calldata path
+    ) external view returns (uint256[] memory amounts) {
         return IUniswapV2Router01(router).getAmountsIn(amountOut, path);
     }
 
@@ -44,12 +47,8 @@ contract DonateOnDEX {
 
         amounts = IUniswapV2Router01(router).swapExactETHForTokens{
             value: msg.value - donation
-        }(amountOutMin, path, address(this), deadline);
+        }(amountOutMin, path, msg.sender, deadline);
 
-        IERC20(path[path.length - 1]).safeTransfer(
-            msg.sender,
-            amounts[path.length - 1]
-        );
         pool.transfer(donation);
         return amounts;
     }
@@ -67,10 +66,10 @@ contract DonateOnDEX {
         IERC20(path[0]).safeTransferFrom(
             msg.sender,
             address(this),
-            IUniswapV2Router01(router).getAmountsIn(amountOut, path)[0]
+            amountInMax
         );
 
-        IERC20(path[0]).safeIncreaseAllowance(address(router), amountInMax);
+        IERC20(path[0]).safeIncreaseAllowance(router, amountInMax);
 
         amounts = IUniswapV2Router01(router).swapTokensForExactETH(
             amountOut,
@@ -80,13 +79,14 @@ contract DonateOnDEX {
             deadline
         );
 
-        IERC20(path[0]).safeApprove(address(router), 0);
+        IERC20(path[0]).safeApprove(router, 0);
 
         uint256 donation = (amounts[amounts.length - 1] * percent) / 10000;
         amounts[amounts.length - 1] = amounts[amounts.length - 1] - donation;
 
         payable(msg.sender).transfer(amounts[amounts.length - 1]);
         pool.transfer(donation);
+        if (amountInMax > amounts[0]) IERC20(path[0]).safeTransfer(msg.sender, amountInMax - amounts[0]);
 
         return amounts;
     }
@@ -103,7 +103,7 @@ contract DonateOnDEX {
 
         IERC20(path[0]).safeTransferFrom(msg.sender, address(this), amountIn);
 
-        IERC20(path[0]).safeIncreaseAllowance(address(router), amountIn);
+        IERC20(path[0]).safeIncreaseAllowance(router, amountIn);
 
         amounts = IUniswapV2Router01(router).swapExactTokensForETH(
             amountIn,
@@ -135,20 +135,24 @@ contract DonateOnDEX {
         uint256 amountsIn = IUniswapV2Router01(router).getAmountsIn(
             amountOut,
             path
-        )[1];
+        )[0];
 
         uint256 donation = (amountsIn * percent) / 10000;
 
-        amountOut = (amountOut * percent) / 10000;
+        amountsIn = amountsIn - donation;
+
+        amountOut = IUniswapV2Router01(router).getAmountsOut(
+            amountsIn,
+            path
+        )[1];
 
         amounts = IUniswapV2Router01(router).swapETHForExactTokens{
-            value: msg.value - donation
-        }(amountOut, path, address(this), deadline);
+            value: amountsIn
+        }(amountOut, path, msg.sender, deadline);
 
-        IERC20(path[path.length - 1]).safeTransfer(
-            msg.sender,
-            amounts[path.length - 1]
-        );
+        if (msg.value - donation > amountsIn)
+            payable(msg.sender).transfer(msg.value - donation - amountsIn);
+
         pool.transfer(donation);
         return amounts;
     }
