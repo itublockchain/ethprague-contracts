@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/ulerdogan/Code/ethprague/contracts/DonateOnDEX.sol": {
-      "lastModificationDate": 1654952426820,
-      "contentHash": "ad16c8f7278455b872a7e44bcbfa2474",
+      "lastModificationDate": 1654961753747,
+      "contentHash": "c9cd131ef7ec4ad6c93ed699e8e8768d",
       "sourceName": "contracts/DonateOnDEX.sol",
       "solcConfig": {
         "version": "0.8.13",
