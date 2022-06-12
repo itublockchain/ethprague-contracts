@@ -32,6 +32,8 @@ contract Lender {
         carbonToken = IERC20(carbonAddress);
     }
 
+    receive() external payable {}
+
     function takeLoan(uint256 collateralAmount, uint256 duration) external {
         require(loans[msg.sender].endTime == 0);
         //User must approve this contract before taking a loan
