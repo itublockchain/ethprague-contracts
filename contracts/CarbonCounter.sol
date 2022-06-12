@@ -4,15 +4,17 @@ pragma solidity 0.8.13;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import { Base64 } from "./libraries/Base64.sol";
 
-contract CarbonCounter is ERC721URIStorage {
+contract CarbonCounter is ERC721URIStorage, Ownable {
     
     error Soulbound();
 
     uint totalSupply = 0;
 
-    string constant SVGPart1 = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><path d="M283.429 512v-109.714H329.143c92.306 0 129.646 -128 36.571 -164.571 54.747 -36.571 36.571 -128 -36.571 -137.143C329.143 100.571 329.143 36.571 256 36.571S182.857 100.571 182.857 100.571C109.714 109.714 90.002 201.143 146.286 237.714 54.747 274.286 91.319 402.286 182.857 402.286h45.714v109.714z" style="fill:#000;fill-opacity:1;stroke:none"/><text x="50%" y="47%" class="base" fill="url(#c)" dominant-baseline="middle" text-anchor="middle" style="font-family:Josefin Sans,sans-serif;font-size:140px">';
+    //svg design will be better, but this is a placeholder for now. we didnt have enough time to design a great svg.
+    string constant SVGPart1 = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><path d="M283.429 512v-109.714h137.143l-109.714 -118.857h109.714l-116.37 -109.714H402.286L256 36.571 109.714 173.714h109.714l-128 109.714h109.714L91.429 402.286h137.143v109.714z" style="fill:#000;fill-opacity:0.2;stroke:none"/><text class="d" dominant-baseline="front" text-anchor="middle"  x="50%" y="55%" style="font-family:Fantasy;font-size:140px">';
     string constant SVGPart2  = '</text></svg>';
     
     IERC20 immutable carbonToken;
