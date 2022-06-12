@@ -3,9 +3,10 @@ pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IStarknetCore.sol";
 
-contract Marketplace is ERC721Holder {
+contract Marketplace is ERC721Holder, Ownable {
 
     /*//////////////////////////////////////////////////////////////
                                 STRUCTS
@@ -167,7 +168,7 @@ contract Marketplace is ERC721Holder {
         seller.transfer(sellerShare);
     }
 
-    function setL2Address(uint256 _L2Address) external {
+    function setL2Address(uint256 _L2Address) external onlyOwner {
         L2CONTRACT_ADDRESS = _L2Address;
     }
 

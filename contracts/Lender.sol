@@ -26,7 +26,19 @@ contract Lender {
     uint256 constant threeWeekInterest = 15; //percent
     uint256 constant fourWeekInterest = 20; //percent
 
-    uint256 constant maticPriceOfCarbon = 4; 
+    uint256 constant maticPriceOfCarbon = 4; //will use chainlink price feed once carbon tokens get popular and chainlink starts providing price feeds for them.
+
+    event LoanTaken(
+        address borrower,
+        uint256 amountLended,
+        uint256 amountBorrowed,
+        uint256 endTime
+    );
+
+    event LoanRepaid(
+        address borrower,
+        uint256 amountRepaid
+    ); 
 
     constructor(address carbonAddress) {
         carbonToken = IERC20(carbonAddress);
@@ -63,6 +75,8 @@ contract Lender {
         );
 
         loans[msg.sender] = loan;
+
+        emit LoanTaken(msg.sender, maticLendAmount, collateralAmount, block.timestamp + duration);
     }
 
     function repayLoan() external payable { 
@@ -75,5 +89,7 @@ contract Lender {
 
 
         delete loans[msg.sender];
+
+        emit LoanRepaid(msg.sender, carbonRepayAmount);
     }
 }
