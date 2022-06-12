@@ -65,7 +65,7 @@ func constructor{
   return()
 end
 
-## VIEWS 
+## VIEWS
 ################################################################################
 
 @view
@@ -283,7 +283,7 @@ end
 func _delete_auction{
   syscall_ptr: felt*,
   pedersen_ptr: HashBuiltin*,
-  range_check_ptr  
+  range_check_ptr
 }(nft_addr: felt, nft_id: felt):
   auction_details.write(
     nft_addr=nft_addr,
