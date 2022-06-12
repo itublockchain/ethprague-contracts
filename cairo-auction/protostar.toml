@@ -1,10 +1,17 @@
 ["protostar.config"]
 protostar_version = "0.2.3"
 
+[profile.testnet.protostar.deploy]
+network="alpha-goerli"
+
+["protostar.shared_command_configs"]
+cairo_path = ["./lib/cairo_contracts/src"]
+
 ["protostar.project"]
 libs_path = "lib"
 
 ["protostar.contracts"]
 main = [
-    "./src/main.cairo",
+    "./src/auction.cairo",
+ #  "./src/itu_token.cairo"
 ]
